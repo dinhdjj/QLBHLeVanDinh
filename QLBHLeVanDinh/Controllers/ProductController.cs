@@ -1,4 +1,4 @@
-using QLBHLeVanDinh.Models;
+﻿using QLBHLeVanDinh.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +24,7 @@ namespace QLBHLeVanDinh.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(FormCollection form, Product product)
+        public ActionResult Create(Product product)
         {
             da.Products.InsertOnSubmit(product);
             da.SubmitChanges();
@@ -35,6 +35,21 @@ namespace QLBHLeVanDinh.Controllers
         {
             var product = da.Products.First(p => p.ProductID == id);
             return View(product);
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var product = da.Products.First(p => p.ProductID == id);
+            return View(product);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(int id, FormCollection form)
+        {
+            var product = da.Products.First(p => p.ProductID == id);
+            product.ProductName = form["ProductName"];
+            da.SubmitChanges();
+            return RedirectToAction("Index");
         }
     }
 }
