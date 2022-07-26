@@ -14,8 +14,21 @@ namespace QLBHLeVanDinh.Controllers
         // GET: Product
         public ActionResult Index()
         {
-            var ps = da.Products.ToList();
+            var ps = da.Products.OrderByDescending(s=>s.ProductID).ToList();
             return View(ps);
+        }
+
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Create(FormCollection form, Product product)
+        {
+            da.Products.InsertOnSubmit(product);
+            da.SubmitChanges();
+            return RedirectToAction("Index");
         }
     }
 }
