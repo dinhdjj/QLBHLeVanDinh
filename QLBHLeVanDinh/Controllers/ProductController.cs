@@ -51,5 +51,20 @@ namespace QLBHLeVanDinh.Controllers
             da.SubmitChanges();
             return RedirectToAction("Index");
         }
+
+        public ActionResult Delete(int id)
+        {
+            var product = da.Products.First(p => p.ProductID == id);
+            return View(product);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id, FormCollection form)
+        {
+            var product = da.Products.First(p => p.ProductID == id);
+            da.Products.DeleteOnSubmit(product);
+            da.SubmitChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
