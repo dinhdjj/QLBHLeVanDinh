@@ -1,4 +1,4 @@
-﻿using QLBHLeVanDinh.Models;
+using QLBHLeVanDinh.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +29,12 @@ namespace QLBHLeVanDinh.Controllers
             da.Products.InsertOnSubmit(product);
             da.SubmitChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Details(int id)
+        {
+            var product = da.Products.First(p => p.ProductID == id);
+            return View(product);
         }
     }
 }
