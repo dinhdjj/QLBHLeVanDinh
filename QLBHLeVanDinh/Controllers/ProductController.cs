@@ -20,6 +20,9 @@ namespace QLBHLeVanDinh.Controllers
 
         public ActionResult Create()
         {
+            ViewData["SupplierID"] = new SelectList(da.Suppliers, "SupplierID", "CompanyName");
+            ViewData["CategoryID"] = new SelectList(da.Categories, "CategoryID", "CategoryName");
+
             return View();
         }
 
