@@ -43,6 +43,11 @@ namespace QLBHLeVanDinh.Controllers
         public ActionResult Edit(int id)
         {
             var product = da.Products.First(p => p.ProductID == id);
+
+            ViewData["SupplierID"] = new SelectList(da.Suppliers, "SupplierID", "CompanyName", product.SupplierID);
+            ViewData["CategoryID"] = new SelectList(da.Categories, "CategoryID", "CategoryName", product.CategoryID);
+
+
             return View(product);
         }
 
