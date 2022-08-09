@@ -15,6 +15,9 @@ namespace QLBHLeVanDinh.Controllers
         {
             var cart = getCart();
 
+            ViewBag.CartCount = cart.Sum(i => i.Quantity);
+            ViewBag.CartAmount = cart.Sum(i => i.Total);
+
             return View(cart);
         }
 
