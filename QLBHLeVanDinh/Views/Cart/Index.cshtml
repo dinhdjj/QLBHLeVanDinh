@@ -57,6 +57,7 @@
     <tr>
         <td colspan="2"> Số lượng: @ViewBag.CartCount </td>
         <td colspan="2"> Tổng thành tiền @String.Format("{0:0,0.0}", ViewBag.CartAmount)đ  </td>
+        <td>@Html.ActionLink("Order", "Order", new { })</td>
     </tr>
     
 
