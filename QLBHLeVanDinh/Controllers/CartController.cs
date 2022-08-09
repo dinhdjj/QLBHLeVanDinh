@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Transactions;
 
 namespace QLBHLeVanDinh.Controllers
 {
@@ -56,30 +57,40 @@ namespace QLBHLeVanDinh.Controllers
 
         public ActionResult Order()
         {
-            var cart = getCart();
-
-            var order = new Order();
-            order.OrderDate = DateTime.Now;
-            da.Orders.InsertOnSubmit(order);
-            da.SubmitChanges();
-
-            order = da.Orders.OrderByDescending(i => i.OrderID).Take(1).First();
-
-            foreach(var item in cart)
+            using (var trans = new TransactionScope())
             {
-                Order_Detail d = new Order_Detail();
-                d.OrderID = order.OrderID;
-                d.ProductID = item.ProductID;
-                d.Quantity = short.Parse(item.Quantity.ToString());
-                d.Discount = 0;
+                try
+                {
+                    var cart = getCart();
 
-                da.Order_Details.InsertOnSubmit(d);
+                    var order = new Order();
+                    order.OrderDate = DateTime.Now;
+                    da.Orders.InsertOnSubmit(order);
+                    da.SubmitChanges();
+
+                    foreach (var item in cart)
+                    {
+                        Order_Detail d = new Order_Detail();
+                        d.OrderID = order.OrderID;
+                        d.ProductID = item.ProductID;
+                        d.Quantity = short.Parse(item.Quantity.ToString());
+                        d.Discount = 0;
+
+                        da.Order_Details.InsertOnSubmit(d);
+                    }
+
+                    da.SubmitChanges();
+                    trans.Complete();
+                    Session["cart"] = null;
+                }
+                catch (Exception)
+                {
+                    trans.Dispose();
+                    return RedirectToAction("Index");
+                }
             }
 
-            da.SubmitChanges();
-
-            Session["cart"] = null;
-            return RedirectToAction("Index", "Product");
+                return RedirectToAction("Index", "Product");
         }
 
         private List<CartItem> getCart()
